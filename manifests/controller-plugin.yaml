@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: csi-plugin-example
+  name: csi-plugin-example
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: csi-plugin-example
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: csi-plugin-example
+    spec:
+      serviceAccountName: csi-sa
+      containers:
+      - image: k8s.gcr.io/sig-storage/csi-provisioner:v3.1.0
+        name: external-provisioner
+        args:
+        - "--csi-address=$(CSI_ENDPOINT)"
+        env:
+        - name: CSI_ENDPOINT
+          value: unix:///var/lib/csi/sockets/pluginproxy/csi.sock
+        volumeMounts:
+        - mountPath: /var/lib/csi/sockets/pluginproxy
+          name: domain-socket
+      - image: k8s.gcr.io/sig-storage/csi-attacher:v3.5.0
+        name: external-attacher
+        args:
+        - "--csi-address=$(CSI_ENDPOINT)"
+        - "-v=5"
+        env:
+        - name: CSI_ENDPOINT
+          value: unix:///var/lib/csi/sockets/pluginproxy/csi.sock
+        volumeMounts:
+        - name: domain-socket
+          mountPath: /var/lib/csi/sockets/pluginproxy
+      - image: viveksinghggits/bsos:0.0.16_yt
+        name: csi-plugin-example
+        resources: {}
+        args:
+        - "--endpoint=$(CSI_ENDPOINT)"
+        - "--token=$(DO_TOKEN)"
+        env:
+          - name: CSI_ENDPOINT
+            value: unix:///var/lib/csi/sockets/pluginproxy/csi.sock
+        volumeMounts:
+        - mountPath: /var/lib/csi/sockets/pluginproxy
+          name: domain-socket
+      volumes:
+      - name: domain-socket
+        emptyDir: {}
+status: {}
