@@ -4,11 +4,11 @@ go 1.23.3
 
 require (
 	github.com/container-storage-interface/spec v1.11.0
-	google.golang.org/grpc v1.68.1
+	github.com/digitalocean/godo v1.131.0
+	google.golang.org/grpc v1.69.2
 )
 
 require (
-	github.com/digitalocean/godo v1.131.0 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
 	github.com/hashicorp/go-retryablehttp v0.7.7 // indirect
