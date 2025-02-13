@@ -6,7 +6,7 @@ require (
 	github.com/container-storage-interface/spec v1.11.0
 	github.com/digitalocean/godo v1.131.0
 	google.golang.org/grpc v1.68.1
-	k8s.io/apimachinery v0.32.0
+	k8s.io/apimachinery v0.32.2
 )
 
 require (
